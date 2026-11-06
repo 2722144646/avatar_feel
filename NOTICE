@@ -1,0 +1,23 @@
+avatar_feel
+Copyright (C) 2026 2722144646
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+第三方说明：
+
+- 本仓库不包含任何第三方源代码。
+- `LICENSE` 中的 GNU AGPL v3 文本来自 Free Software Foundation，仅作为许可条款引用。
+- "VTube Studio"、"Live2D" 等名称是各自权利人的商标；本库不包含、也不分发其 SDK，
+  仅在文档中作为可能的接入示例提及。

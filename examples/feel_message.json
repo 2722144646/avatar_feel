@@ -1,0 +1,11 @@
+{
+  "type": "feel",
+  "labels": {
+    "happy": 0.6,
+    "tired": 0.4
+  },
+  "intensity": 0.8,
+  "confidence": 0.9,
+  "note": "有点开心，但确实累了",
+  "turn_id": "turn-example"
+}

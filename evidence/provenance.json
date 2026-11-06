@@ -1,0 +1,36 @@
+{
+  "work": {
+    "name": "avatar_feel",
+    "version": "0.1.0",
+    "author": "2722144646",
+    "author_email": "73869037+2722144646@users.noreply.github.com",
+    "created": "2026-11-06",
+    "language": "Python",
+    "license": "AGPL-3.0-only",
+    "commercial_license": "COMMERCIAL.md"
+  },
+  "origin": {
+    "repository": "dsh-vts-avatar (private)",
+    "local_path": "E:\\dsh-vts-avatar\\project",
+    "extracted_from": "src/dsh_vts_avatar/performance/affect",
+    "commits": [
+      {"hash": "30e56e1", "subject": "Snapshot audit scripts and configs before emotion refactor", "date": "2026-11-06T13:40:33+08:00"},
+      {"hash": "0fddc58", "subject": "Add [emotion] mode switch (legacy default) to finish Phase 0", "date": "2026-11-06T13:46:00+08:00"},
+      {"hash": "dcd6ffb", "subject": "Add affect data model with anchors and replayable JSONL log", "date": "2026-11-06T13:52:00+08:00"},
+      {"hash": "abe3501", "subject": "Add affect expression composer and wire it behind [emotion].mode", "date": "2026-11-06T20:12:00+08:00"},
+      {"hash": "2e9f8bd", "subject": "Add vts_avatar_feel tool, affect log wiring and startup-only VTS check", "date": "2026-11-06T20:50:00+08:00"},
+      {"hash": "36b0106", "subject": "Decay described affect after a 2s hold so the face does not stay smiling", "date": "2026-11-06T20:55:00+08:00"},
+      {"hash": "5af86bf", "subject": "Add user requirements doc and weighted affect fusion (Phase 4)", "date": "2026-11-06T21:02:00+08:00"},
+      {"hash": "5ffcf50", "subject": "Record the two user-flagged gaps (prompt nudge, cross-turn state) in the requirements doc", "date": "2026-11-06T21:30:00+08:00"},
+      {"hash": "efb60e4", "subject": "Apply idle liveliness and 70/30 expression strength from user answers", "date": "2026-11-06T21:08:00+08:00"}
+    ]
+  },
+  "extraction": {
+    "date": "2026-11-06",
+    "mode": "standalone library",
+    "kept": ["schema", "presets", "anchors", "composer", "fusion", "log"],
+    "added": ["protocol", "engine", "tests", "docs", "evidence"],
+    "removed": ["VTube Studio injection", "DSH plugin tool", "speech clock", "mixer"]
+  },
+  "notes": "Each source file carries an author/license header. Hashes of all tracked files are recorded in manifest.sha256."
+}
