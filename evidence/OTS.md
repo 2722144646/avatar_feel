@@ -10,42 +10,39 @@
 | 对应提交 | `c6e428a`（本仓库初始提交） |
 | 证明文件 | `evidence/manifest.sha256.ots` |
 | 提交的日历 | opentimestamps 官方 pool（a/b.pool）、eternitywall、catallaxy（共 4 个） |
-| 状态 | **Pending**：已进入日历，等待聚合进比特币区块（通常几小时内） |
+| 状态 | **已完成**：4 条比特币区块证明（block 974817 / 974819 / 974839 / 974847） |
 
 ## 它证明了什么
 
 `manifest.sha256` 在提交给日历时就已经存在。任何人在之后修改仓库文件，都无法让这份清单的哈希与
 未来某个比特币区块的时间戳对上——因为 Merkle 路径与区块头绑定。
 
-## 怎么把它变成完整证明
+## 完整证明（2026-11-07 完成）
 
-等几个小时，让日历完成聚合，然后在仓库根目录执行：
+`ots upgrade` 已成功执行，`.ots` 从 pending（1155 字节）升级为完整证明（5369 字节），包含 4 条独立区块证明：
 
-```powershell
-.venv\Scripts\ots.exe upgrade evidence\manifest.sha256.ots
+```text
+BitcoinBlockHeaderAttestation(974817)
+BitcoinBlockHeaderAttestation(974819)
+BitcoinBlockHeaderAttestation(974839)
+BitcoinBlockHeaderAttestation(974847)
 ```
 
-看到 `Success! Bitcoin block <高度> attests existence as of <UTC 时间>` 就说明完整证明已写入 `.ots` 文件。
-之后提交一次即可。
+最早锚定在 block 974817。也就是说：`manifest.sha256` 的内容在 2026-11-06 提交后、
+区块 974817 被打包之前，就已经存在。
 
-> 本机 `.venv` 里的 `python-bitcoinlib` 有一个 Windows 兼容补丁：`bitcoin/core/key.py` 在找不到
-> OpenSSL DLL 时用 `unittest.mock.MagicMock()` 占位，避免 `ctypes` 崩溃。只影响本地工具，不影响本库。
-
-## 怎么验证
+验证需要能访问比特币区块链（本地节点或支持 OTS 的验证工具）：
 
 ```powershell
-# 查看证明内容（不需要联网，也不需要比特币节点）
-.venv\Scripts\ots.exe info evidence\manifest.sha256.ots
-
-# 完整验证（升级完成后）
-.venv\Scripts\ots.exe verify evidence\manifest.sha256.ots
-# 或者用公开的比特币区块浏览器 API（各客户端参数不同，见 ots verify --help）
+.venv\Scripts\ots.exe info evidence\manifest.sha256.ots     # 离线看结构
+.venv\Scripts\ots.exe verify evidence\manifest.sha256.ots   # 需要比特币节点
 ```
 
 第三方也能验证：`.ots` 文件本身包含到区块的 Merkle 路径，用任意 OTS 实现都能独立校验，不需要信任本仓库。
 
 ## 注意
 
-- **不要**在升级完成前重新生成 `manifest.sha256`——那会改变被存证的内容，旧 `.ots` 就对不上了。
+- **不要**重新生成 `manifest.sha256` 之后继续拿这份 `.ots` 当证明——内容变了，哈希就对不上。
+  想再存证就重新生成清单并 `ots stamp` 一次，旧证明保留为历史版本。
 - 之后每次发版想再存证，重新生成清单并 `ots stamp` 一次，形成时间链。
 - 本文件（`evidence/OTS.md`）不在 `c6e428a` 的清单里，属于存证记录本身，不影响验证。
