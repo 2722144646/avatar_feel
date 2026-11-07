@@ -1,48 +1,55 @@
 # OpenTimestamps 存证记录
 
-## 这次盖了什么
+本仓库所有源码与文档的哈希清单，按版本分别时间戳锚定到比特币。
+
+## v0.1.0（已完成）
 
 | 项 | 值 |
 |---|---|
-| 被存证文件 | `evidence/manifest.sha256`（25 个文件的 SHA-256 清单） |
-| 该文件自身的 SHA-256 | `c42e95076da9172cb9018b17726d6a0c2c078e8ba388e1d3adc32bc043f7f826` |
-| 存证时间（本地） | 2026-11-06 22:2x（Asia/Hong_Kong） |
-| 对应提交 | `c6e428a`（本仓库初始提交） |
+| 清单文件 | `evidence/manifest-v0.1.0.sha256` |
+| 清单自身 SHA-256 | `c42e95076da9172cb9018b17726d6a0c2c078e8ba388e1d3adc32bc043f7f826` |
+| 证明文件 | `evidence/manifest-v0.1.0.sha256.ots` |
+| 提交 | `c6e428a`（初始提交） |
+| 状态 | **完整**：4 条比特币区块证明 |
+| 区块 | `974817` / `974819` / `974839` / `974847` |
+
+## v0.2.0（pending）
+
+| 项 | 值 |
+|---|---|
+| 清单文件 | `evidence/manifest.sha256`（28 个文件） |
 | 证明文件 | `evidence/manifest.sha256.ots` |
-| 提交的日历 | opentimestamps 官方 pool（a/b.pool）、eternitywall、catallaxy（共 4 个） |
-| 状态 | **已完成**：4 条比特币区块证明（block 974817 / 974819 / 974839 / 974847） |
+| 存证时间 | 2026-11-07 09:35（Asia/Hong_Kong） |
+| 状态 | **Pending**：已提交 4 个日历，等待聚合进比特币区块 |
 
-## 它证明了什么
+v0.2.0 改了什么：`tool`（AI 自述）权重升到 1.0（全表最高，必须以它为主）；
+`manual` 从投票权重表移出（它是用户指令，仍走硬覆盖）。其余为文档与测试。
 
-`manifest.sha256` 在提交给日历时就已经存在。任何人在之后修改仓库文件，都无法让这份清单的哈希与
-未来某个比特币区块的时间戳对上——因为 Merkle 路径与区块头绑定。
-
-## 完整证明（2026-11-07 完成）
-
-`ots upgrade` 已成功执行，`.ots` 从 pending（1155 字节）升级为完整证明（5369 字节），包含 4 条独立区块证明：
-
-```text
-BitcoinBlockHeaderAttestation(974817)
-BitcoinBlockHeaderAttestation(974819)
-BitcoinBlockHeaderAttestation(974839)
-BitcoinBlockHeaderAttestation(974847)
-```
-
-最早锚定在 block 974817。也就是说：`manifest.sha256` 的内容在 2026-11-06 提交后、
-区块 974817 被打包之前，就已经存在。
-
-验证需要能访问比特币区块链（本地节点或支持 OTS 的验证工具）：
+## 等几小时后：升级 v0.2.0
 
 ```powershell
-.venv\Scripts\ots.exe info evidence\manifest.sha256.ots     # 离线看结构
-.venv\Scripts\ots.exe verify evidence\manifest.sha256.ots   # 需要比特币节点
+cd E:\avatar_feel
+.venv\Scripts\ots.exe upgrade evidence\manifest.sha256.ots
 ```
 
-第三方也能验证：`.ots` 文件本身包含到区块的 Merkle 路径，用任意 OTS 实现都能独立校验，不需要信任本仓库。
+成功输出 `Success! Timestamp complete` 后提交推送即可。
+
+## 验证
+
+```powershell
+# 离线查看证明结构
+.venv\Scripts\ots.exe info evidence\manifest-v0.1.0.sha256.ots
+.venv\Scripts\ots.exe info evidence\manifest.sha256.ots
+
+# 完整验证需要比特币节点
+.venv\Scripts\ots.exe verify evidence\manifest-v0.1.0.sha256.ots
+```
+
+第三方验证不需要信任本仓库：`.ots` 文件自带到区块头的 Merkle 路径，任何 OTS 实现都能独立核对。
 
 ## 注意
 
-- **不要**重新生成 `manifest.sha256` 之后继续拿这份 `.ots` 当证明——内容变了，哈希就对不上。
-  想再存证就重新生成清单并 `ots stamp` 一次，旧证明保留为历史版本。
-- 之后每次发版想再存证，重新生成清单并 `ots stamp` 一次，形成时间链。
-- 本文件（`evidence/OTS.md`）不在 `c6e428a` 的清单里，属于存证记录本身，不影响验证。
+- **每个版本单独存证**：清单变化就重新生成、重新 `ots stamp`，旧证明保留为历史。
+- 不要在旧版本上 `ots upgrade`：`upgrade` 只补齐自己那份 `.ots`。
+- 本机 `.venv` 里的 `python-bitcoinlib` 打过 Windows 兼容补丁（找不到 OpenSSL 时用 `MagicMock` 占位），只影响本机工具，不影响证明。
+- 时间戳证明“内容在某时刻前已存在”，不证明“你是谁”；作者身份靠仓库提交、版权声明和软著登记补。

@@ -81,8 +81,11 @@ engine.add(AffectEvidence(source="keyword", labels={"sad": 1.0}, intensity=0.5, 
 来源可靠性（可在 `FusionSettings` 覆盖）：
 
 ```text
-manual 1.0 / tool 0.9 / tag 0.85 / context 0.75 / classifier 0.7 / keyword 0.45 / ndi 0.0
+tool 1.0（AI 自述，权重最高，必须以它为主）
+tag 0.85 / context 0.75 / classifier 0.7 / keyword 0.45 / ndi 0.0（只修正，不投票）
 ```
+
+`manual` 不是投票来源，而是用户显式指令：走 6 秒硬覆盖，不参与加权。
 
 ---
 

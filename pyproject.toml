@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "avatar-feel"
-version = "0.1.0"
+version = "0.2.0"
 description = "Self-report emotion channel: weighted labels -> fused affect state -> five-feature targets for any avatar renderer."
 readme = "README.md"
 requires-python = ">=3.11"
