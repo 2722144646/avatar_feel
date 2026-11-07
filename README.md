@@ -82,10 +82,11 @@ engine.add(AffectEvidence(source="keyword", labels={"sad": 1.0}, intensity=0.5, 
 
 ```text
 tool 1.0（AI 自述，权重最高，必须以它为主）
-tag 0.85 / context 0.75 / classifier 0.7 / keyword 0.45 / ndi 0.0（只修正，不投票）
+tag 0.85 / context 0.75 / classifier 0.7 / manual 0.5 / keyword 0.45 / ndi 0.0（只修正，不投票）
 ```
 
-`manual` 不是投票来源，而是用户显式指令：走 6 秒硬覆盖，不参与加权。
+`manual` 是用户显式指令，但仍只是 0.5 权重的普通票：**没有任何来源可以硬覆盖**，
+用户命令也参与混合。这是为了“自由”——强制表达本身就是一种不真实。
 
 ---
 

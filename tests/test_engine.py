@@ -1,3 +1,5 @@
+import pytest
+
 from avatar_feel import AffectLog, FeelEngine, FeelRequest
 
 
@@ -25,11 +27,11 @@ def test_engine_blends_mixed_labels_end_to_end(tmp_path):
     engine = FeelEngine(log=log)
     result = engine.feel(FeelRequest.from_message({"labels": {"happy": 0.6, "tired": 0.4}, "intensity": 0.8}))
 
-    assert result.state.labels["happy"] == 0.6
-    assert result.state.labels["tired"] == 0.4
+    assert result.state.labels["happy"] == pytest.approx(0.6)
+    assert result.state.labels["tired"] == pytest.approx(0.4)
     assert result.face["smile"] > 0.5
     assert "pitch" in result.head
-    assert engine.state().labels["happy"] == 0.6
+    assert engine.state().labels["happy"] == pytest.approx(0.6)
     assert list((tmp_path / "affect").glob("affect-*.jsonl"))
 
 

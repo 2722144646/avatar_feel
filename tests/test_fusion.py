@@ -18,22 +18,35 @@ def test_sources_blend_instead_of_being_ranked():
     assert state.source == "fusion"
 
 
-def test_manual_instruction_is_the_only_hard_override():
+def test_manual_is_a_vote_and_tool_still_leads():
     now, clock = _clock()
     fusion = AffectFusion(clock=clock)
     fusion.add(AffectEvidence(source="tool", labels={"happy": 1.0}, confidence=0.9, timestamp=now[0]))
     state = fusion.add(AffectEvidence(source="manual", labels={"sad": 1.0}, confidence=1.0, timestamp=now[0]))
 
+    # No source hard-overrides: the command is a 0.5-weight vote, and the AI's
+    # own reading (weight 1.0) still leads.
+    assert set(state.labels) == {"happy", "sad"}
+    assert state.labels["happy"] > state.labels["sad"]
+    assert state.source == "fusion"
+
+
+def test_manual_alone_still_moves_the_face():
+    now, clock = _clock()
+    fusion = AffectFusion(clock=clock)
+    state = fusion.add(
+        AffectEvidence(source="manual", labels={"sad": 1.0}, intensity=0.8, confidence=1.0, timestamp=now[0])
+    )
     assert state.labels == {"sad": 1.0}
-    assert state.source == "manual"
+    assert state.intensity > 0.5
 
 
-def test_manual_override_expires():
+def test_manual_expires_like_any_other_evidence():
     now, clock = _clock()
     fusion = AffectFusion(clock=clock)
     fusion.add(AffectEvidence(source="manual", labels={"sad": 1.0}, confidence=1.0, timestamp=now[0]))
-    now[0] += 7.0
-    assert fusion.state().source != "manual"
+    now[0] += 11.0
+    assert fusion.state().labels == {"neutral": 1.0}
 
 
 def test_evidence_expires_to_neutral():
@@ -74,5 +87,6 @@ def test_tool_self_report_has_the_highest_weight():
     assert max(SOURCE_WEIGHTS.values()) == SOURCE_WEIGHTS["tool"]
     assert SOURCE_WEIGHTS["tool"] > SOURCE_WEIGHTS["tag"]
     assert SOURCE_WEIGHTS["tool"] > SOURCE_WEIGHTS["keyword"]
-    # manual is a user command, handled by the override path, not a vote.
-    assert "manual" not in SOURCE_WEIGHTS
+    # A user command is just a half-weight vote; nothing hard-overrides.
+    assert SOURCE_WEIGHTS["manual"] == 0.5
+    assert SOURCE_WEIGHTS["manual"] < SOURCE_WEIGHTS["tool"]
